@@ -1,10 +1,13 @@
-#ifndef __GRID_H__
-#define __GRID_H__
+#ifndef __TYPES_H__
+#define __TYPES_H__
 
-#include <cstdint>
+#include <type_traits>
 
-/* generic types */
-typedef uint_fast32_t f_uint_t
-typedef int_fast32_t f_int_t
+// static cast enum to its integral type
+template < typename E >
+constexpr auto to_integral (E e) -> typename std::underlying_type < E >::type 
+{
+  return static_cast < typename std::underlying_type < E >::type > (e);
+}
 
-#endif /* __GRID_H__ */
+#endif /* __TYPES_H__ */
