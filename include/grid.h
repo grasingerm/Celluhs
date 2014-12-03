@@ -38,31 +38,42 @@ struct cell
 {
   state status;
   pos_t position;
-  std::array < std::shared_ptr < cell >, 4 > neighbors;
 };
 
 //  TODO: write STL iterator for grid class
-class Grid
+template < uint ROWS, uint COLS > class Grid
 {
 public:
-  Grid (const uint rows, const uint cols, const double base, 
-    const double height);
-  Grid (const uint rows, const uint cols, const double base,
+  Grid < ROWS, COLS > (const double base, const double height)
+  {
+    const auto dx = base / (n_cols-1);
+    const auto dy = height / (n_rows-1);
+
+    for (auto i = uint {0}; i < n_cols; i++)
+      for (auto j = uint {0}; j < n_rows; j++)
+        
+  }
+  Grid < ROWS, COLS > (const uint rows, const uint cols, const double base,
     const double height, const state init_state);
-  Grid (const uint rows, const uint cols, const double base,
+  Grid < ROWS, COLS > (const uint rows, const uint cols, const double base,
     const double height, const init::randu_t);
   // TODO: write constructor for defining custom entry cells
   // TODO: write constructor for using custom geometry
 
   void step (void (*rule) (cell&));
   void step_interior (void (*rule) (cell&));
-  void bc (void (*rule) (cell&), const uint entry_idx, const direction dir,
-    const uint num_cells);
+  void bc ((void *rule) (cell&), const pos_t start, 
+          (pos_t* incr) (const pos_t&));
+  // TODO: consider losing this... reduntant
+  inline cell& operator() (const uint i, const uint j)
+  {
+    return cells [i][j];
+  }
 
-  uint n_rows;
-  uint n_cols;
+  const static uint n_rows = ROWS;
+  const static uint n_cols = COLS;
 private:
-  std::vector < std::shared_ptr < cell > > entry_cells;
+  std::array < std::array < cell, COLS >, ROWS > cells;
 };
 
   namespace init
