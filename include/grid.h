@@ -16,11 +16,13 @@ enum state
   SUSPENDED
 };
 
+typedef uchar state_t;
+
 struct grid
 {
   ulonglong n_rows;
   ulonglong n_cols;
-  uint* states;
+  state_t* states;
 };
 
 void init_gd (struct grid* gd, ulonglong n_rows, ulonglong n_cols, 

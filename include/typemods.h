@@ -3,6 +3,8 @@
 
 #define _CUZ_ERR_MSG_BUFFER_SZ 512
 
+typedef unsigned char uchar;
+typedef short unsigned int suint;
 typedef unsigned int uint;
 typedef unsigned long ulong;
 typedef unsigned long long ulonglong;

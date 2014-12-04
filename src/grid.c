@@ -21,7 +21,7 @@
 void init_gd (struct grid* gd, ulonglong n_rows, ulonglong n_cols, 
   struct cuz_err_t* err)
 {
-  uint* states = (uint *) malloc ( (sizeof(uint)) * n_rows * n_cols);
+  state_t* states = (state_t *) malloc ( (sizeof(state_t)) * n_rows * n_cols);
   CHECK_MEM_ALLOC (states, err, );
 
   gd->states = states;
@@ -70,7 +70,8 @@ void step (struct grid* gd, void (*rule) (uint i, uint j),
   struct cuz_err_t* err)
 {
   ulonglong i, j;
-  uint* states = (uint *) malloc ( (sizeof(uint)) * gd->n_rows * gd->n_cols);
+  state_t* states = (state_t *) malloc ( (sizeof(state_t)) * 
+    gd->n_rows * gd->n_cols);
   CHECK_MEM_ALLOC (states, err, );
 
   i = 1;

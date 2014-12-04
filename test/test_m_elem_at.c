@@ -7,13 +7,13 @@ int main ()
 {
   ulonglong i, rows, cols;
   const uint seed = 30;
-  const uint start = 5;
+  const uint start = 2;
   const ulong end = 1000000000000;
   struct cuz_err_t err;
   struct grid gd;
   srand (seed);
 
-  for (i = start; i <= end; i+=start)
+  for (i = start; i <= end; i*=i)
   {
     rows = i;
     cols = rows;
