@@ -2,6 +2,8 @@
 #define __TYPEMODS_H__
 
 #define _CUZ_ERR_MSG_BUFFER_SZ 512
+#define _CUZ_NBR_BUFFER_SZ 64
+#define _CUZ_PRINTF_CELL_BUFFER_SZ 64
 
 typedef unsigned char uchar;
 typedef short unsigned int suint;

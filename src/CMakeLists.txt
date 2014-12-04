@@ -43,4 +43,4 @@ add_executable(some_executable some_source_files.cpp)
 #     target_link_libraries(some_executable m)
 # endif (UNIX)
 
-install(TARGETS some_executable DESTINATION bin)
+install(TARGETS some_executable DESTINATICUZ_CUZ_ON bin)

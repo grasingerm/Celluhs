@@ -11,50 +11,53 @@
 
 #define CUZ_ELEM_AT(array, i, j, n_rows) (*( (array) + (j) * (n_rows) + (i) ))
 
-enum state
+enum cuz_state
 {
-  ON,
-  OFF,
-  SUSPENDED
+  CUZ_OFF,
+  CUZ_ON,
+  CUZ_SUSPENDED
 };
 
-enum direction
+enum cuz_direction
 {
-  SELF,
-  EAST,
-  NORTH,
-  WEST,
-  SOUTH,
-  NORTHEAST,
-  NORTHWEST,
-  SOUTHWEST,
-  SOUTHEAST
+  CUZ_SELF,
+  CUZ_EAST,
+  CUZ_NORTH,
+  CUZ_WEST,
+  CUZ_SOUTH,
+  CUZ_NORTHEAST,
+  CUZ_NORTHWEST,
+  CUZ_SOUTHWEST,
+  CUZ_SOUTHEAST
 };
 
-typedef uchar state_t;
-typedef ulong dim_t;
+typedef uchar cuz_state_t;
+typedef ulong cuz_dim_t;
 
-struct grid
+struct cuz_grid
 {
-  dim_t n_rows;
-  dim_t n_cols;
-  state_t* states;
+  cuz_dim_t n_rows;
+  cuz_dim_t n_cols;
+  cuz_state_t* states;
 };
 
-struct rule
+struct cuz_rule
 {
-  state_t (*f) (state_t*, uint);
-  void (*get_nbr_states) (state_t*, struct grid*, dim_t, dim_t, uint);
-  dim_t range_i[2]; // start, finish
-  dim_t range_j[2]; // start, finish
+  cuz_state_t (*f) (cuz_state_t*, uint);
+  uint (*get_nbr_states) (cuz_state_t*, struct cuz_grid*, cuz_dim_t, cuz_dim_t);
+  cuz_dim_t range_i[2]; // start, finish
+  cuz_dim_t range_j[2]; // start, finish
 };
 
-void init_gd (struct grid* gd, dim_t n_rows, dim_t n_cols, 
+void cuz_init_gd (struct cuz_grid* gd, cuz_dim_t n_rows, cuz_dim_t n_cols, 
   struct cuz_err_t* err);
-void destroy_gd (struct grid* gd);
-void randomize_gd (struct grid* gd);
-void print_gd (struct grid* gd);
-void step (struct grid* gd, struct rule* rules, uint n_rules, uint n_nbrs,
-  struct cuz_err_t* err);
+void cuz_destroy_gd (struct cuz_grid* gd);
+void cuz_randomize_gd (struct cuz_grid* gd);
+void cuz_fill_gd (struct cuz_grid* gd, cuz_state_t s);
+void cuz_fill_pat_gd (struct cuz_grid* gd, cuz_state_t* ss, uint ns);
+void cuz_print_gd (struct cuz_grid* gd);
+void cuz_printf_gd (struct cuz_grid* gd, void (*stformat) (cuz_state_t, char*));
+void cuz_step (struct cuz_grid* gd, struct cuz_rule* rules, uint n_rules, 
+  uint n_nbrs, struct cuz_err_t* err);
 
 #endif

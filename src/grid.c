@@ -9,11 +9,12 @@
 // \param n_rows Number of rows in grid
 // \param n_cols Number of cols in grid
 // \param err Pointer to cuz error type
-void init_gd (struct grid* gd, dim_t n_rows, dim_t n_cols, 
+void cuz_init_gd (struct cuz_grid* gd, cuz_dim_t n_rows, cuz_dim_t n_cols, 
   struct cuz_err_t* err)
 {
-  state_t* states = (state_t *) malloc ( (sizeof(state_t)) * n_rows * n_cols);
-  CHECK_MEM_ALLOC (states, err, );
+  cuz_state_t* states = (cuz_state_t *) 
+                          malloc ( (sizeof(cuz_state_t)) * n_rows * n_cols);
+  CHECK_MEM_ALLOC (states, err, { return; });
 
   gd->states = states;
   gd->n_rows = n_rows;
@@ -25,7 +26,7 @@ void init_gd (struct grid* gd, dim_t n_rows, dim_t n_cols,
 //! Grid destructor
 //
 // \param gd Pointer to grid to delete
-void destroy_gd (struct grid* gd)
+void cuz_destroy_gd (struct cuz_grid* gd)
 {
   free (gd->states);
 }
@@ -33,62 +34,124 @@ void destroy_gd (struct grid* gd)
 //! Init grid to random states
 //
 // \param gd Pointer to grid to randomize
-void randomize_gd (struct grid* gd)
+void cuz_randomize_gd (struct cuz_grid* gd)
 {
-  ulonglong i, j;
+  cuz_dim_t i, j;
   for (i = 0; i < gd->n_cols; i++)
     for (j = 0; j < gd->n_rows; j++)
-      CUZ_PGRID_ELEM_AT (gd, i, j) = (rand () % 2 == 0) ? ON : OFF;
+      CUZ_PGRID_ELEM_AT (gd, i, j) = (rand () % 2 == 0) ? CUZ_ON : CUZ_OFF;
+}
+
+//! Fill grid to a default state
+//
+// \param gd Pointer to grid to fill
+// \param s Default state
+void cuz_fill_gd (struct cuz_grid* gd, cuz_state_t s)
+{
+  cuz_dim_t i, j;
+  for (i = 0; i < gd->n_cols; i++)
+    for (j = 0; j < gd->n_rows; j++)
+      CUZ_PGRID_ELEM_AT (gd, i, j) = s;
+}
+
+//! Fill grid to a default pattern
+//
+// \param gd Pointer to grid to fill
+// \param ss Array of states
+// \param ns Size of array of states
+void cuz_fill_pat_gd (struct cuz_grid* gd, cuz_state_t* ss, uint ns)
+{
+  cuz_dim_t i, j;
+  uint k;
+
+  for (i = 0; i < gd->n_cols; i++)
+    for (j = 0; j < gd->n_rows; j++)
+    {
+      CUZ_PGRID_ELEM_AT (gd, i, j) = ss [k];
+      k++;
+      if (k % ns == 0) k = 0;
+    }
 }
 
 //! Display grid
 //
 // \param gd Pointer to grid to print
-void print_gd (struct grid* gd)
+void cuz_print_gd (struct cuz_grid* gd)
 {
-  ulonglong i, j;
+  cuz_dim_t i, j;
 
   for (j = gd->n_rows; j > 0; j--)
   {
     for (i = 0; i < gd->n_cols; i++)
-      printf ("%d ", CUZ_PGRID_ELEM_AT (gd, i, j-1));
+      printf (" %d ", CUZ_PGRID_ELEM_AT (gd, i, j-1));
 
     putchar ('\n');
   }
 }
 
-//! Simulate an iteration on the grid
-void step (struct grid* gd, struct rule* rules, uint n_rules, uint n_nbrs,
-  struct cuz_err_t* err)
+//! Display grid
+//
+// \param gd Pointer to grid to print
+// \param stformat Pointer to state formatting function
+void cuz_printf_gd (struct cuz_grid* gd, void (*stformat) (cuz_state_t, char*))
+{
+  char _printf_cell_buffer [_CUZ_PRINTF_CELL_BUFFER_SZ];
+  cuz_dim_t i, j;
+
+  for (j = gd->n_rows; j > 0; j--)
+  {
+    for (i = 0; i < gd->n_cols; i++)
+    {
+      stformat (CUZ_PGRID_ELEM_AT (gd, i, j-1), _printf_cell_buffer);
+      fputs (_printf_cell_buffer, stdout);
+    }
+
+    putchar ('\n');
+  }
+}
+
+//! Simulate an iteration the grid
+//
+// \param gd Pointer to grid
+// \param rules Array of rules
+// \param n_rules Number of rules in array
+// \param max_n_nbrs Maximum number of neighbors needed in rules
+// \param err
+// \param err Pointer to cuz error type
+void cuz_step (struct cuz_grid* gd, struct cuz_rule* rules, uint n_rules, 
+  uint max_n_nbrs, struct cuz_err_t* err)
 {
   uchar alloc_flag = 0;
-  state_t _nbr_states [_CUZ_NBR_BUFFER_SZ];
-  state_t* c_nbr_states;
+  cuz_state_t _nbr_states [_CUZ_NBR_BUFFER_SZ];
+  cuz_state_t* c_nbr_states;
   c_nbr_states = _nbr_states; // default buffer
 
-  if (n_nbrs > _CUZ_NBR_BUFFER_SZ)
+  if (max_n_nbrs > _CUZ_NBR_BUFFER_SZ)
   {
-    c_nbr_states = (state_t *) malloc ( (sizeof(state_t))*n_nbrs );
-    CHECK_MEM_ALLOC (c_temp_states, err, );
+    c_nbr_states = (cuz_state_t *) malloc ( (sizeof(cuz_state_t))*max_n_nbrs );
+    CHECK_MEM_ALLOC (c_nbr_states, err, { return; });
     alloc_flag = 1;
   }
   
-  state_t* c_grid_states = (state_t *) malloc ( (sizeof(state_t)) * 
+  cuz_state_t* c_grid_states = (cuz_state_t *) malloc ( (sizeof(cuz_state_t)) * 
     gd->n_rows * gd->n_cols);
-  CHECK_MEM_ALLOC (states, err, 
-    ((alloc_flag) ? free (c_temp_states) : _ret_void ()));
+  CHECK_MEM_ALLOC (c_grid_states, err, {
+    if (alloc_flag) free (c_nbr_states);
+    return;
+  });
 
-  uint k;
-  dim_t i,j;
-  struct rule* prule;
+  uint k, n_nbrs;
+  cuz_dim_t i, j;
+  struct cuz_rule* prule = rules;
   // TODO: vectorize
+  // TODO: consider checking to make sure none of the neighborhoods exceed max
   for (k = 0; k < n_rules; k++)
   {
     for (i = prule->range_i[0]; i <= prule->range_i[1]; i++)
     {
       for (j = prule->range_j[0]; j <= prule->range_j[1]; j++)
       {
-        prule->get_nbr_states (c_nbr_states, gd, i, j, n_nbrs);
+        n_nbrs = prule->get_nbr_states (c_nbr_states, gd, i, j);
         CUZ_ELEM_AT (c_grid_states, i, j, gd->n_rows) = 
           prule->f (c_nbr_states, n_nbrs);
       }
@@ -97,7 +160,7 @@ void step (struct grid* gd, struct rule* rules, uint n_rules, uint n_nbrs,
     prule++;
   }
 
-  if (alloc_flag) free (c_temp_states);
+  if (alloc_flag) free (c_nbr_states);
   free (gd->states);
   gd->states = c_grid_states;
 

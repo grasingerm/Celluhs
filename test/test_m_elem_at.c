@@ -1,3 +1,7 @@
+// Tests a few basic functions
+// Tests memory allocation error reporting
+// Run through valgrind to make sure memory leaks are not occuring
+
 #include <stdio.h>
 #include <stdlib.h>
 #include "grid.h"
@@ -5,12 +9,12 @@
 
 int main ()
 {
-  ulonglong i, rows, cols;
+  cuz_dim_t i, rows, cols;
   const uint seed = 30;
-  const uint start = 2;
-  const ulong end = 1000000000000;
+  const cuz_dim_t start = 2;
+  const cuz_dim_t end = 1000000000000;
   struct cuz_err_t err;
-  struct grid gd;
+  struct cuz_grid gd;
   srand (seed);
 
   for (i = start; i <= end; i*=i)
@@ -18,7 +22,7 @@ int main ()
     rows = i;
     cols = rows;
 
-    init_gd (&gd, rows, cols, &err);
+    cuz_init_gd (&gd, rows, cols, &err);
 
     if (err.code == CUZ_SUCCESS)
       puts ("Grid successfully initialized.\n");
@@ -26,14 +30,14 @@ int main ()
     {
       puts ("Grid initialization failed.");
       puts (err.msg);
-      printf ("Failed at size %llu by %llu\n", rows, cols);
+      printf ("Failed at size %lu by %lu\n", rows, cols);
       exit (err.code);
     }
 
-    randomize_gd (&gd);
-    // print_gd (&gd);
-    printf ("Size %llu by %llu\n", rows, cols);
-    destroy_gd (&gd);
+    cuz_randomize_gd (&gd);
+    cuz_print_gd (&gd);
+    printf ("Size %lu by %lu\n", rows, cols);
+    cuz_destroy_gd (&gd);
 
     puts ("Successfully recovered memory.");
   }
