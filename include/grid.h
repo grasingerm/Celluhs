@@ -18,12 +18,13 @@ enum state
 
 struct grid
 {
-  uint n_rows;
-  uint n_cols;
+  ulonglong n_rows;
+  ulonglong n_cols;
   uint* states;
 };
 
-void init_gd (struct grid* gd, uint n_rows, uint n_cols, struct cuz_err_t* err);
+void init_gd (struct grid* gd, ulonglong n_rows, ulonglong n_cols, 
+  struct cuz_err_t* err);
 void destroy_gd (struct grid* gd);
 void randomize_gd (struct grid* gd);
 void print_gd (struct grid* gd);
