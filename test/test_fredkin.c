@@ -18,39 +18,14 @@ int main ()
   struct cuz_grid gd;
   
   struct cuz_rule rules[n_rules];
-
-  rules[0].f = &cuz_fredkins;
-  rules[0].get_nbr_states = &cuz_vneumann_interior;
-  rules[0].range_i[0] = 1;
-  rules[0].range_i[1] = 23;
-  rules[0].range_j[0] = 1;
-  rules[0].range_j[1] = 23;
-
-  for (k = 1; k < n_rules; k++)
-  {
-    rules[k].f = &cuz_fredkins;
-    rules[k].get_nbr_states = &cuz_vneumann_periodic;
-  }
-
-  rules[1].range_i[0] = 24;
-  rules[1].range_i[1] = 24;
-  rules[1].range_j[0] = 0;
-  rules[1].range_j[1] = 24;
-
-  rules[2].range_i[0] = 1;
-  rules[2].range_i[1] = 23;
-  rules[2].range_j[0] = 24;
-  rules[2].range_j[1] = 24;
-
-  rules[3].range_i[0] = 0;
-  rules[3].range_i[1] = 0;
-  rules[3].range_j[0] = 0;
-  rules[3].range_j[1] = 24;
-
-  rules[4].range_i[0] = 1;
-  rules[4].range_i[1] = 23;
-  rules[4].range_j[0] = 0;
-  rules[4].range_j[1] = 0;
+  CUZ_INIT_ALL_RULES_FULL_RECT (
+    rules, 
+    cuz_fredkins_rule, 
+    cuz_vneumann_interior,
+    cuz_vneumann_periodic, 
+    rows,
+    cols
+    );
 
   cuz_init_gd (&gd, rows, cols, &err);
 
