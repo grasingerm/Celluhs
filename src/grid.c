@@ -116,9 +116,8 @@ void cuz_printf_gd (struct cuz_grid* gd, void (*stformat) (cuz_state_t, char*))
 // \param rules Array of rules
 // \param n_rules Number of rules in array
 // \param max_n_nbrs Maximum number of neighbors needed in rules
-// \param err
 // \param err Pointer to cuz error type
-void cuz_step (struct cuz_grid* gd, struct cuz_rule* rules, uint n_rules, 
+void cuz_step_gd (struct cuz_grid* gd, struct cuz_rule* rules, uint n_rules, 
   uint max_n_nbrs, struct cuz_err_t* err)
 {
   uchar alloc_flag = 0;

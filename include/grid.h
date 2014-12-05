@@ -4,10 +4,10 @@
 #include "typemods.h"
 
 #define CUZ_PGRID_ELEM_AT(grid, i, j) \
-  (*( (grid)->states + ( (j) * (grid)->n_rows ) + (i) ))
+  *( (grid)->states + ( (j) * (grid)->n_rows ) + (i) )
 
 #define CUZ_GRID_ELEM_AT(grid, i, j) \
-  (*( (grid).states + ( (j) * (grid).n_rows ) + (i) ))
+  *( (grid).states + ( (j) * (grid).n_rows ) + (i) )
 
 #define CUZ_ELEM_AT(array, i, j, n_rows) (*( (array) + (j) * (n_rows) + (i) ))
 
@@ -57,7 +57,7 @@ void cuz_fill_gd (struct cuz_grid* gd, cuz_state_t s);
 void cuz_fill_pat_gd (struct cuz_grid* gd, cuz_state_t* ss, uint ns);
 void cuz_print_gd (struct cuz_grid* gd);
 void cuz_printf_gd (struct cuz_grid* gd, void (*stformat) (cuz_state_t, char*));
-void cuz_step (struct cuz_grid* gd, struct cuz_rule* rules, uint n_rules, 
+void cuz_step_gd (struct cuz_grid* gd, struct cuz_rule* rules, uint n_rules, 
   uint n_nbrs, struct cuz_err_t* err);
 
 #endif
