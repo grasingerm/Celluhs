@@ -54,11 +54,29 @@ uint cuz_vneumann_periodic (cuz_state_t* states, struct cuz_grid* gd,
 // \param states Array of neighbor states
 // \param n_nbrs Number of neighbors in neighborhood
 // \return Next state
-cuz_state_t cuz_fredkins (cuz_state_t* states, uint n_nbrs)
+cuz_state_t cuz_fredkins_rule (cuz_state_t* states, uint n_nbrs)
 {
   uint i, count = 0;
   for (i = 0; i < n_nbrs; i++)
     if (states [i] == CUZ_ON)
       count++;
   return (count % 2 == 0) ? CUZ_OFF : CUZ_ON;
+}
+
+//! Update state based on conway's game of life
+//
+// \param states Array of neighbor states
+// \param n_nbrs Number of neighbors in neighborhood
+// \return Next state
+cuz_state_t cuz_conways_life (cuz_state_t* states, uint n_nbrs)
+{
+  uint i, count = 0;
+
+  for (i = 1; i < n_nbrs; i++)
+    if (states [i] == CUZ_ON)
+      count++;
+  
+  if (states [0] == CUZ_ON)
+    return (count == 2, count == 3) ? CUZ_ON : CUZ_OFF;
+  return (count == 3) ? CUZ_ON : CUZ_OFF;
 }

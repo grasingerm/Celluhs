@@ -6,7 +6,13 @@ set(CC clang)
 set(CSTD c11)
 
 # set flags for warnings, errors, and standards
-set(CMAKE_BUILD_TYPE debug)
+if( NOT CMAKE_BUILD_TYPE )
+  set( CMAKE_BUILD_TYPE release CACHE STRING
+       "Choose the type of build, options are: None Debug Release RelWithDebInfo
+        MinSizeRel."
+       FORCE )
+endif()
+
 set(CMAKE_C_FLAGS_DEBUG "-Wall -Wextra -g -std=${CSTD} -pedantic -pedantic-errors")
 set(CMAKE_C_FLAGS_RELEASE "-Wall -Wextra -std=${CSTD} -pedantic -pedantic-errors -O3")
 
@@ -23,4 +29,6 @@ add_executable(test_format_fs test_format_fs.c ../src/grid.c ../src/formats.c)
 add_executable(test_fredkin test_fredkin.c ../src/grid.c ../src/formats.c ../src/rules.c)
 # add_executable(test_rules test_rules.c ../src/grid.c)
 
-# target_link_libraries(test_rules cuint)
+target_link_libraries(test_m_elem_at profiler)
+target_link_libraries(test_format_fs profiler)
+target_link_libraries(test_fredkin profiler)
