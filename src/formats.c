@@ -7,7 +7,7 @@
 //
 // \param s Cell state
 // \param buffer Buffer in which to store formatted string
-void cuz_formats_xosb (cuz_state_t s, char* buffer)
+void cuz_formats_xosb (const cuz_state_t s, char* buffer)
 {
   char c;
 
@@ -37,7 +37,7 @@ void cuz_formats_xosb (cuz_state_t s, char* buffer)
 //
 // \param s Cell state
 // \param buffer Buffer in which to store formatted string
-void cuz_formats_xos (cuz_state_t s, char* buffer)
+void cuz_formats_xos (const cuz_state_t s, char* buffer)
 {
   char c;
 

@@ -9,8 +9,8 @@
 // \param n_rows Number of rows in grid
 // \param n_cols Number of cols in grid
 // \param err Pointer to cuz error type
-void cuz_init_gd (struct cuz_grid* gd, cuz_dim_t n_rows, cuz_dim_t n_cols, 
-  struct cuz_err_t* err)
+void cuz_init_gd (struct cuz_grid* gd, const cuz_dim_t n_rows, 
+  const cuz_dim_t n_cols, struct cuz_err_t* err)
 {
   cuz_state_t* states = (cuz_state_t *) 
                           malloc ( (sizeof(cuz_state_t)) * n_rows * n_cols);
@@ -46,7 +46,7 @@ void cuz_randomize_gd (struct cuz_grid* gd)
 //
 // \param gd Pointer to grid to fill
 // \param s Default state
-void cuz_fill_gd (struct cuz_grid* gd, cuz_state_t s)
+void cuz_fill_gd (struct cuz_grid* gd, const cuz_state_t s)
 {
   cuz_dim_t i, j;
   for (i = 0; i < gd->n_cols; i++)
@@ -59,7 +59,7 @@ void cuz_fill_gd (struct cuz_grid* gd, cuz_state_t s)
 // \param gd Pointer to grid to fill
 // \param ss Array of states
 // \param ns Size of array of states
-void cuz_fill_pat_gd (struct cuz_grid* gd, cuz_state_t* ss, uint ns)
+void cuz_fill_pat_gd (struct cuz_grid* gd, const cuz_state_t* ss, const uint ns)
 {
   cuz_dim_t i, j;
   uint k;
@@ -76,7 +76,7 @@ void cuz_fill_pat_gd (struct cuz_grid* gd, cuz_state_t* ss, uint ns)
 //! Display grid
 //
 // \param gd Pointer to grid to print
-void cuz_print_gd (struct cuz_grid* gd)
+void cuz_print_gd (const struct cuz_grid* const gd)
 {
   cuz_dim_t i, j;
 
@@ -93,7 +93,8 @@ void cuz_print_gd (struct cuz_grid* gd)
 //
 // \param gd Pointer to grid to print
 // \param stformat Pointer to state formatting function
-void cuz_printf_gd (struct cuz_grid* gd, void (*stformat) (cuz_state_t, char*))
+void cuz_printf_gd (const struct cuz_grid* const gd, 
+  void (*stformat) (cuz_state_t, char*))
 {
   char _printf_cell_buffer [_CUZ_PRINTF_CELL_BUFFER_SZ];
   cuz_dim_t i, j;
@@ -117,8 +118,8 @@ void cuz_printf_gd (struct cuz_grid* gd, void (*stformat) (cuz_state_t, char*))
 // \param n_rules Number of rules in array
 // \param max_n_nbrs Maximum number of neighbors needed in rules
 // \param err Pointer to cuz error type
-void cuz_step_gd (struct cuz_grid* gd, struct cuz_rule* rules, uint n_rules, 
-  uint max_n_nbrs, struct cuz_err_t* err)
+void cuz_step_gd (struct cuz_grid* gd, struct cuz_rule* rules, 
+  const uint n_rules, const uint max_n_nbrs, struct cuz_err_t* err)
 {
   uchar alloc_flag = 0;
   cuz_state_t _nbr_states [_CUZ_NBR_BUFFER_SZ];

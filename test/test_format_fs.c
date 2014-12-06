@@ -1,9 +1,10 @@
 // Tests formatting
 #include <stdio.h>
 #include <stdlib.h>
-#include "grid.h"
-#include "typemods.h"
 #include "formats.h"
+#include "grid.h"
+#include "rules.h"
+#include "typemods.h"
 
 int main ()
 {
@@ -20,7 +21,7 @@ int main ()
   };
 
   const uint num_tests = 2;
-  uint i;
+  uint i, j, k, n_nbr;
 
   const cuz_dim_t rows = 15, cols = 15;
   const uint seed = 30;
@@ -52,6 +53,25 @@ int main ()
     cuz_printf_gd (&gd, format_fs [i]);
     puts("");
   }
+
+  cuz_state_t nbrhood [10];
+
+  for (i = 0; i < cols; i++)
+    for (j = 0; j < rows; j++)
+    {
+      printf ("VN Nbrhood at %2u,%2u; %s: ", i, j, 
+        ((CUZ_PGRID_ELEM_AT (&gd, i, j) ? "[ X ]" : "[   ]")));
+      n_nbr = cuz_vneumann_periodic (nbrhood, &gd, i, j);
+      for (k = 0; k < n_nbr; k++)
+        fputs (((nbrhood [k] == CUZ_ON) ? "[ X ]" : "[   ]"), stdout);
+      fputc ('\n', stdout);
+      printf ("MR Nbrhood at %2u,%2u; %s: ", i, j, 
+        ((CUZ_PGRID_ELEM_AT (&gd, i, j) ? "[ X ]" : "[   ]")));
+      n_nbr = cuz_moore_periodic (nbrhood, &gd, i, j);
+      for (k = 0; k < n_nbr; k++)
+        fputs (((nbrhood [k] == CUZ_ON) ? "[ X ]" : "[   ]"), stdout);
+      fputc ('\n', stdout);
+    }
 
   cuz_destroy_gd (&gd);
   puts ("Successfully recovered memory.");

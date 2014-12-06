@@ -4,18 +4,18 @@
 #include "grid.h"
 #include "rules.h"
 
-uint cuz_vneumann_interior (cuz_state_t* states, struct cuz_grid* gd, 
-  cuz_dim_t i, cuz_dim_t j);
-uint cuz_vneumann_periodic (cuz_state_t* states, struct cuz_grid* gd, 
-  cuz_dim_t i, cuz_dim_t j);
+uint cuz_vneumann_interior (cuz_state_t* states, 
+  const struct cuz_grid* const gd, const cuz_dim_t i, const cuz_dim_t j);
+uint cuz_vneumann_periodic (cuz_state_t* states, 
+  const struct cuz_grid* const gd, const cuz_dim_t i, const cuz_dim_t j);
 
-uint cuz_moore_interior (cuz_state_t* states, struct cuz_grid* gd,
-  cuz_dim_t i, cuz_dim_t j);
-uint cuz_moore_periodic (cuz_state_t* states, struct cuz_grid* gd, 
-  cuz_dim_t i, cuz_dim_t j);
+uint cuz_moore_interior (cuz_state_t* states, 
+  const struct cuz_grid* const gd, const cuz_dim_t i, const cuz_dim_t j);
+uint cuz_moore_periodic (cuz_state_t* states, 
+  const struct cuz_grid* const gd, const cuz_dim_t i, const cuz_dim_t j);
 
-cuz_state_t cuz_fredkins_rule (cuz_state_t* states, uint n_nbrs);
-cuz_state_t cuz_conways_life (cuz_state_t* states, uint n_nbrs);
+cuz_state_t cuz_fredkins_rule (const cuz_state_t* states, const uint n_nbrs);
+cuz_state_t cuz_conways_life (const cuz_state_t* states, const uint n_nbrs);
 
 //! Initialize all five rules for a full rectangular grid
 //
