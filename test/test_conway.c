@@ -1,17 +1,41 @@
 // Tests formatting
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 #include "formats.h"
 #include "grid.h"
 #include "rules.h"
 #include "typemods.h"
 
-int main ()
+int main (int argc, char* argv[])
 {
   uint k;
-  const uint n_iters = 100;
+  uint n_iters = 100, seed = (uint) time (NULL);
   const uint n_rules = 5;
-  const cuz_dim_t rows = 25, cols = 25;
+  cuz_dim_t rows = 25, cols = 25;
+  char* rest;
+
+  switch (argc)
+  {
+    case 5:
+      seed = (uint) strtoul (argv [4], &rest, 10);
+    case 4:
+      rows = (cuz_dim_t) strtoul (argv [2], &rest, 10);
+      cols = (cuz_dim_t) strtoul (argv [3], &rest, 10);
+    case 2:
+      n_iters = (uint) strtoul (argv [1], &rest, 10);
+      break;
+    case 1:
+      break;
+    default:
+      printf ("usage: %s iterations [[rows, cols], [seed]]\n", argv [0]);
+      exit (1);
+  }
+
+  printf ("%lu x %lu grid, %u iterations, seed = %u\n", 
+    rows, cols, n_iters, seed);
+
+  srand (seed);
 
   struct cuz_err_t err;
   struct cuz_grid gd;
