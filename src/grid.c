@@ -152,7 +152,7 @@ void cuz_step_gd (struct cuz_grid* gd, struct cuz_rule* rules,
       for (j = prule->range_j[0]; j <= prule->range_j[1]; j++)
       {
         n_nbrs = prule->get_nbr_states (c_nbr_states, gd, i, j);
-        CUZ_ELEM_AT (c_grid_states, i, j, gd->n_rows) = 
+        CUZ_ELEM_AT (c_grid_states, i, j, gd->n_cols) = 
           prule->f (c_nbr_states, n_nbrs);
       }
     }

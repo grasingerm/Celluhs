@@ -4,12 +4,18 @@
 #include "typemods.h"
 
 #define CUZ_PGRID_ELEM_AT(grid, i, j) \
-  *( (grid)->states + ( (i) * (grid)->n_cols ) + (j) )
+  *( (grid)->states + ( (j) * (grid)->n_cols ) + (i) )
 
 #define CUZ_GRID_ELEM_AT(grid, i, j) \
-  *( (grid).states + ( (i) * (grid).n_cols ) + (j) )
+  *( (grid).states + ( (j) * (grid).n_cols ) + (i) )
 
-#define CUZ_ELEM_AT(array, i, j, n_cols) (*( (array) + (i) * (n_cols) + (j) ))
+#define CUZ_ELEM_AT(array, i, j, n_cols) (*( (array) + (j) * (n_cols) + (i) ))
+
+#define CUZ_ELEM_ITER_NEXT_I(array) (array++)
+#define CUZ_GRID_ITER_NEXT_I(grid) ((grid->states)++)
+#define CUZ_ELEM_ITER_NEXT_J(array, n_cols) ( (array) += (n_cols) )
+#define CUZ_GRID_ITER_NEXT_J(grid) \
+  CUZ_ELEM_ITER_NEXT_J(grid->states, grid->n_cols)
 
 enum cuz_state
 {
