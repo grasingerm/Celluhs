@@ -30,6 +30,13 @@ add_executable(test_fredkin test_fredkin.c ../src/grid.c ../src/formats.c ../src
 add_executable(test_conway test_conway.c ../src/grid.c ../src/formats.c ../src/rules.c)
 # add_executable(test_rules test_rules.c ../src/grid.c)
 
-target_link_libraries(test_m_elem_at profiler)
-target_link_libraries(test_format_fs profiler)
-target_link_libraries(test_fredkin profiler)
+
+if(GOPROF)
+  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -lprofiler")
+endif(GOPROF)
+
+if(GPROF)
+  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -pg")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pg")
+  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -pg")
+endif(GPROF)

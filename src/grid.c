@@ -62,7 +62,7 @@ void cuz_fill_gd (struct cuz_grid* gd, const cuz_state_t s)
 void cuz_fill_pat_gd (struct cuz_grid* gd, const cuz_state_t* ss, const uint ns)
 {
   cuz_dim_t i, j;
-  uint k;
+  uint k = 0;
 
   for (i = 0; i < gd->n_cols; i++)
     for (j = 0; j < gd->n_rows; j++)
