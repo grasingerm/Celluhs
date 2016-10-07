@@ -126,7 +126,6 @@ void cuz_step_gd(struct cuz_grid *gd, struct cuz_grid *temp_gd,
   cuz_dim_t i, j;
   cuz_state_t *temp;
   uchar alloc_flag = 0;
-  struct cuz_rule *prule = rules;
   c_nbr_states = _nbr_states;
 
   if (max_n_nbrs > _CUZ_NBR_BUFFER_SZ) {
@@ -138,14 +137,13 @@ void cuz_step_gd(struct cuz_grid *gd, struct cuz_grid *temp_gd,
   /* TODO: vectorize */
   /* TODO: consider checking to make sure none of the neighborhoods exceed max */
   for (k = 0; k < n_rules; ++k) {
-    for (i = prule->range_i[0]; i <= prule->range_i[1]; ++i) {
-      for (j = prule->range_j[0]; j <= prule->range_j[1]; ++j) {
-        n_nbrs = prule->get_nbr_states(c_nbr_states, gd, i, j);
-        CUZ_PGRID_ELEM_AT(temp_gd, i, j) = prule->f(c_nbr_states, n_nbrs);
+    #pragma omp parallel for private(i, j, n_nbrs) schedule(dynamic)
+    for (i = rules[k].range_i[0]; i <= rules[k].range_i[1]; ++i) {
+      for (j = rules[k].range_j[0]; j <= rules[k].range_j[1]; ++j) {
+        n_nbrs = rules[k].get_nbr_states(c_nbr_states, gd, i, j);
+        CUZ_PGRID_ELEM_AT(temp_gd, i, j) = rules[k].f(c_nbr_states, n_nbrs);
       }
     }
-
-    ++prule;
   }
 
   if (alloc_flag)
