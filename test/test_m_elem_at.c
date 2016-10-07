@@ -1,7 +1,3 @@
-// Tests a few basic functions
-// Tests memory allocation error reporting
-// Run through valgrind to make sure memory leaks are not occuring
-
 #include <stdio.h>
 #include <stdlib.h>
 #include "grid.h"

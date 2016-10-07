@@ -1,4 +1,3 @@
-// Tests formatting
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -7,13 +6,19 @@
 #include "rules.h"
 #include "typemods.h"
 
+#define n_rules 5
+
 int main (int argc, char* argv[])
 {
   uint k;
-  uint n_iters = 100, seed = (uint) time (NULL);
-  const uint n_rules = 5;
-  cuz_dim_t rows = 25, cols = 25;
   char* rest;
+
+  struct cuz_err_t err, err2;
+  struct cuz_grid gd, temp_gd;
+  struct cuz_rule rules[n_rules];
+  
+  uint n_iters = 100, seed = (uint) time (NULL);
+  cuz_dim_t rows = 25, cols = 25;
 
   switch (argc)
   {
@@ -37,10 +42,6 @@ int main (int argc, char* argv[])
 
   srand (seed);
 
-  struct cuz_err_t err;
-  struct cuz_grid gd;
-  
-  struct cuz_rule rules[n_rules];
   CUZ_INIT_ALL_RULES_FULL_RECT (
     rules, 
     cuz_conways_life, 
@@ -51,8 +52,9 @@ int main (int argc, char* argv[])
     );
 
   cuz_init_gd (&gd, rows, cols, &err);
+  cuz_init_gd (&temp_gd, rows, cols, &err2);
 
-  if (err.code == CUZ_SUCCESS)
+  if (err.code == CUZ_SUCCESS && err2.code == CUZ_SUCCESS)
     puts ("Grid successfully initialized.\n");
   else
   {
@@ -69,7 +71,7 @@ int main (int argc, char* argv[])
   {
     puts ("-----------------------------------------------------------------");
     printf ("k = %u\n\n", k);
-    cuz_step_gd (&gd, rules, n_rules, 5, &err);
+    cuz_step_gd (&gd, &temp_gd, rules, n_rules, 5, &err);
     cuz_printf_gd (&gd, &cuz_formats_xos);
 
     puts ("-----------------------------------------------------------------");
@@ -82,6 +84,7 @@ int main (int argc, char* argv[])
   }
 
   cuz_destroy_gd (&gd);
+  cuz_destroy_gd (&temp_gd);
   puts ("Successfully recovered memory.");
 
   return err.code;

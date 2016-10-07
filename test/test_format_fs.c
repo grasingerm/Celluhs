@@ -1,4 +1,3 @@
-// Tests formatting
 #include <stdio.h>
 #include <stdlib.h>
 #include "formats.h"
@@ -8,7 +7,12 @@
 
 int main ()
 {
-  // formatting functions to test
+
+  uint i, j, k, n_nbr;
+  struct cuz_err_t err;
+  struct cuz_grid gd;
+  cuz_state_t nbrhood [10];
+
   void (*format_fs []) (cuz_state_t s, char* buffer) = {
     &cuz_formats_xos,
     &cuz_formats_xosb
@@ -21,14 +25,10 @@ int main ()
   };
 
   const uint num_tests = 2;
-  uint i, j, k, n_nbr;
 
   const cuz_dim_t rows = 15, cols = 15;
   const uint seed = 30;
 
-  struct cuz_err_t err;
-  struct cuz_grid gd;
-  
   srand (seed);
 
   cuz_init_gd (&gd, rows, cols, &err);
@@ -53,8 +53,6 @@ int main ()
     cuz_printf_gd (&gd, format_fs [i]);
     puts("");
   }
-
-  cuz_state_t nbrhood [10];
 
   for (i = 0; i < cols; i++)
     for (j = 0; j < rows; j++)
