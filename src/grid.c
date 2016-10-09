@@ -125,10 +125,22 @@ void cuz_step_gd(struct cuz_grid *gd, struct cuz_grid *temp_gd,
   cuz_dim_t i, j;
   cuz_state_t *temp;
 
-  /* TODO: consider checking to make sure none of the neighborhoods exceed max */
+  if (max_n_nbrs > _CUZ_NBR_BUFFER_SZ) {
+    err->code = CUZ_BUFFER_ERR;
+    snprintf(err->msg, _CUZ_ERR_MSG_BUFFER_SZ,
+             "Required buffer size for "
+             "neighbors, %u, is greater than buffer size, %u (%s:%d). Enlarge "
+             "buffer size for storing neighbor states by editting the celluhs/"
+             "typemods.h header.",
+             max_n_nbrs, _CUZ_NBR_BUFFER_SZ, __FILE__, __LINE__);
+
+    return;
+  }
+
+  /* TODO: consider checking to make sure none of the neighborhoods exceed max
+   */
   for (k = 0; k < n_rules; ++k) {
-    #pragma omp parallel for private(i, j, n_nbrs, c_nbr_states) \
-      schedule(dynamic)
+#pragma omp parallel for private(i, j, n_nbrs, c_nbr_states) schedule(dynamic)
     for (i = rules[k].range_i[0]; i <= rules[k].range_i[1]; ++i) {
       for (j = rules[k].range_j[0]; j <= rules[k].range_j[1]; ++j) {
         n_nbrs = rules[k].get_nbr_states(c_nbr_states, gd, i, j);

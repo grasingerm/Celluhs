@@ -42,3 +42,7 @@ target_link_libraries(test_format_fs celluhs)
 target_link_libraries(test_fredkin celluhs)
 target_link_libraries(test_conway celluhs)
 target_link_libraries(test_conway_quiet celluhs)
+
+install(TARGETS celluhs DESTINATION /usr/local/lib)
+file(GLOB headers "include/*.h")
+install(FILES ${headers} DESTINATION /usr/local/include/celluhs)
