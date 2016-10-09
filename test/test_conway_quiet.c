@@ -11,7 +11,7 @@
 
 int main (int argc, char* argv[])
 {
-  double start_time;
+  double start_time, end_time;
   uint k;
   char* rest;
 
@@ -74,12 +74,7 @@ int main (int argc, char* argv[])
   {
     cuz_step_gd (&gd, &temp_gd, rules, n_rules, 5, &err);
 
-    if (k % (n_iters / 100) == 0) {
-      puts ("-----------------------------------------------------------------");
-      printf ("k = %u\n\n", k);
-      cuz_printf_gd (&gd, &cuz_formats_xos);
-      puts ("-----------------------------------------------------------------");
-    }
+    if (k % (n_iters / 20) == 0) printf("%u / %u iterations\n", k, n_iters);
 
     if (err.code != CUZ_SUCCESS)
     {
@@ -87,7 +82,10 @@ int main (int argc, char* argv[])
       fputs (err.msg, stderr);
     }
   }
-  printf("Time elapsed: %f\n", omp_get_wtime() - start_time);
+
+  end_time = omp_get_wtime();
+  cuz_printf_gd (&gd, &cuz_formats_xos);
+  printf("Time elapsed: %f\n", end_time - start_time);
 
   cuz_destroy_gd (&gd);
   cuz_destroy_gd (&temp_gd);

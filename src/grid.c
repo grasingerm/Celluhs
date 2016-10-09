@@ -120,24 +120,15 @@ void cuz_step_gd(struct cuz_grid *gd, struct cuz_grid *temp_gd,
                  struct cuz_rule *rules, const uint n_rules,
                  const uint max_n_nbrs, struct cuz_err_t *err) {
 
-  cuz_state_t _nbr_states[_CUZ_NBR_BUFFER_SZ];
-  cuz_state_t *c_nbr_states;
+  cuz_state_t c_nbr_states[_CUZ_NBR_BUFFER_SZ];
   uint k, n_nbrs;
   cuz_dim_t i, j;
   cuz_state_t *temp;
-  uchar alloc_flag = 0;
-  c_nbr_states = _nbr_states;
 
-  if (max_n_nbrs > _CUZ_NBR_BUFFER_SZ) {
-    c_nbr_states = (cuz_state_t *)malloc((sizeof(cuz_state_t)) * max_n_nbrs);
-    CHECK_MEM_ALLOC(c_nbr_states, err, { return; });
-    alloc_flag = 1;
-  }
-
-  /* TODO: vectorize */
   /* TODO: consider checking to make sure none of the neighborhoods exceed max */
   for (k = 0; k < n_rules; ++k) {
-    #pragma omp parallel for private(i, j, n_nbrs) schedule(dynamic)
+    #pragma omp parallel for private(i, j, n_nbrs, c_nbr_states) \
+      schedule(dynamic)
     for (i = rules[k].range_i[0]; i <= rules[k].range_i[1]; ++i) {
       for (j = rules[k].range_j[0]; j <= rules[k].range_j[1]; ++j) {
         n_nbrs = rules[k].get_nbr_states(c_nbr_states, gd, i, j);
@@ -145,9 +136,6 @@ void cuz_step_gd(struct cuz_grid *gd, struct cuz_grid *temp_gd,
       }
     }
   }
-
-  if (alloc_flag)
-    free(c_nbr_states);
 
   temp = gd->states;
   gd->states = temp_gd->states;

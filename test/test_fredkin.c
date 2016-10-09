@@ -4,11 +4,13 @@
 #include "grid.h"
 #include "rules.h"
 #include "typemods.h"
+#include <omp.h>
 
 #define n_rules 5
 
 int main ()
 {
+  double start_time;
   uint k;
   cuz_dim_t i, j;
   struct cuz_err_t err, err2;
@@ -42,10 +44,10 @@ int main ()
 
   cuz_fill_gd (&gd, CUZ_OFF);
 
-  for (j = 0; j < 5; j++)
+  for (j = 0; j < 5; ++j)
     CUZ_PGRID_ELEM_AT (&gd, 12, j+12) = CUZ_ON;
 
-  for (i = 0; i < 2; i++)
+  for (i = 0; i < 2; ++i)
   {
     CUZ_PGRID_ELEM_AT (&gd, 13+i, 16) = CUZ_ON;
     CUZ_PGRID_ELEM_AT (&gd, 13+i, 14) = CUZ_ON;
@@ -53,7 +55,8 @@ int main ()
 
   cuz_printf_gd (&gd, &cuz_formats_xos);
 
-  for (k = 1; k <= n_iters; k++)
+  start_time = omp_get_wtime();
+  for (k = 1; k <= n_iters; ++k)
   {
     puts ("-----------------------------------------------------------------");
     printf ("k = %u\n\n", k);
@@ -68,6 +71,7 @@ int main ()
       fputs (err.msg, stderr);
     }
   }
+  printf("Time elapsed: %f\n", omp_get_wtime() - start_time);
 
   cuz_destroy_gd (&gd);
   cuz_destroy_gd (&temp_gd);
